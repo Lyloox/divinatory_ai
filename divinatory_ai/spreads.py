@@ -70,7 +70,7 @@ def draw_keywords_for(*subjects, n_meanings=3):
     # Draw the expected number of cards
     nb_subjects = len(subjects)
     rate_reversed_cards = 1 / 4 if nb_subjects > 2 else 0
-    cards = random.choices(interpretations, k=nb_subjects)
+    cards = random.sample(interpretations, nb_subjects)
 
     # Print each card
     suits_counter = Counter()
@@ -82,9 +82,9 @@ def draw_keywords_for(*subjects, n_meanings=3):
         reversed = random.random() < rate_reversed_cards
         card_name = ' '.join([w.capitalize() for w in card['name'].split()])
         keywords = ' '.join(card['keywords'])
-        meanings = card['meanings']['shadow' if reversed else 'light']
+        meanings = list(set(card['meanings']['shadow' if reversed else 'light']))
         if len(meanings) > n_meanings:
-            meanings = random.choices(meanings, k=3)
+            meanings = random.sample(meanings, 3)
         meanings = '\r\n'.join(meanings)
 
         print(f"{subject}\r\n" +
@@ -102,7 +102,7 @@ def draw_keywords_for(*subjects, n_meanings=3):
 
 def draw_fortune_telling_for(*subjects):
     nb_subjects = len(subjects)
-    cards = random.choices(interpretations, k=nb_subjects)
+    cards = random.sample(interpretations, nb_subjects)
     for subject, card in zip(subjects, cards):
         print(f"{subject}: " if subject else ""
         f"{' '.join([w.capitalize() for w in card['name'].split()])} – "
@@ -116,7 +116,7 @@ def get_spreads_dict():
     """
     spreads = dict()
     spreads.update({"Yes / No":
-                        (lambda x: "Yes" if random.random() > 5 else "No", 42)})
+                        (lambda x: "Yes" if random.random() > 0.5 else "No", 42)})
     subjects = ["The first one tells you what led to this situation",
                 "The second is what is actually going on",
                 "The last is the actual result"]
